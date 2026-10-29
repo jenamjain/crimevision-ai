@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CrimeVision AI – Intelligent Multimodal Forensic Analysis Platform</title>
+  
+  <!-- Modern Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- Top Header Navigation -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-icon">🛡️</div>
+      <div>
+        <div style="display:flex; align-items:center;">
+          <span class="brand-title">CrimeVision AI</span>
+          <span class="brand-badge">Forensic Core v1.0</span>
+        </div>
+        <div style="font-size: 0.72rem; color: var(--text-dim); margin-top: 1px;">
+          Multimodal Crime Scene Reconstruction & Evidence Intelligence
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Stats -->
+    <div class="stats-strip">
+      <div class="stat-pill" title="Total digital evidence uploaded">
+        <span>📁 Evidence:</span>
+        <span class="num" id="stat-total-evidence">0</span>
+      </div>
+      <div class="stat-pill threat" title="Weapons or critical threats detected">
+        <span>⚠️ Threats:</span>
+        <span class="num" id="stat-threats">0</span>
+      </div>
+      <div class="stat-pill" title="Persons detected or tracked">
+        <span>👤 Persons:</span>
+        <span class="num" id="stat-persons">0</span>
+      </div>
+      <div class="stat-pill" title="Fused intelligence cases">
+        <span>🧠 Fused Cases:</span>
+        <span class="num" id="stat-cases">0</span>
+      </div>
+    </div>
+
+    <!-- Header Actions -->
+    <div class="header-actions">
+      <button class="btn btn-secondary" id="btn-analyze-all" title="Process all pending evidence">
+        ⚡ Run All Pending
+      </button>
+      <button class="btn btn-accent" id="btn-fuse-evidence" title="Correlate multimodal evidence into a unified case">
+        🔗 Fuse Multimodal
+      </button>
+      <button class="btn btn-primary" id="btn-generate-pdf" title="Generate comprehensive forensic PDF case report">
+        📄 Export PDF Report
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Grid Workspace -->
+  <main class="app-container">
+
+    <!-- Left Sidebar: Evidence Management & Ingestion -->
+    <aside class="sidebar glass-panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>🗂️</span> Digital Evidence Locker
+        </div>
+        <span style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 600;" id="evidence-counter">0 Items</span>
+      </div>
+
+      <div class="panel-body">
+        <!-- Upload Dropzone -->
+        <div class="dropzone" id="dropzone">
+          <input type="file" id="file-input" style="display: none;" accept="image/*,audio/*,video/*">
+          <div class="dropzone-icon">📥</div>
+          <div class="dropzone-text">Click or Drag Evidence Here</div>
+          <div class="dropzone-sub">Images (.jpg, .png) • Audio (.mp3, .wav) • Video (.mp4)</div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="image">Images</button>
+          <button class="filter-btn" data-filter="audio">Audio</button>
+          <button class="filter-btn" data-filter="video">Video</button>
+        </div>
+
+        <!-- Evidence List Container -->
+        <div class="evidence-list" id="evidence-list-container">
+          <div class="empty-state">
+            <div class="empty-state-icon">🔍</div>
+            <div class="empty-state-title">No Evidence Uploaded</div>
+            <div class="empty-state-desc">Upload crime scene photos, 911 calls, or CCTV surveillance footage to begin.</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center Panel: Interactive Analysis Workspace -->
+    <section class="workspace glass-panel">
+      <!-- Navigation Tabs -->
+      <nav class="workspace-tabs">
+        <button class="ws-tab active" data-view="inspector">
+          <span>🔬</span> Evidence Inspector
+        </button>
+        <button class="ws-tab" data-view="timeline">
+          <span>⏱️</span> Unified Timeline
+        </button>
+        <button class="ws-tab" data-view="fusion">
+          <span>🧠</span> Intelligence & Fusion
+        </button>
+        <button class="ws-tab" data-view="reports">
+          <span>📑</span> Forensic Reports
+        </button>
+      </nav>
+
+      <!-- View 1: Evidence Inspector -->
+      <div class="ws-view active" id="view-inspector">
+        <div id="inspector-empty" class="empty-state" style="padding: 100px 20px;">
+          <div class="empty-state-icon">🎯</div>
+          <div class="empty-state-title">Select Evidence to Inspect</div>
+          <div class="empty-state-desc">Choose an item from the Evidence Locker on the left to review detections, bounding boxes, or audio transcripts.</div>
+        </div>
+
+        <div id="inspector-content" style="display: none;">
+          <!-- Header of selected evidence -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div>
+              <h2 id="inspector-filename" style="font-size: 1.15rem; font-weight: 700;">Filename</h2>
+              <div id="inspector-meta" style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">Metadata</div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-primary" id="inspector-btn-analyze">▶️ Analyze</button>
+              <button class="btn btn-danger" id="inspector-btn-delete">🗑️ Delete</button>
+            </div>
+          </div>
+
+          <!-- Media Visualizer Container (Image canvas / Audio Player / Video Player) -->
+          <div class="media-container" id="media-viewport">
+            <img id="inspector-image" class="media-viewer" style="display: none;" alt="Crime Scene Evidence">
+            <canvas id="inspector-canvas" class="bbox-canvas" style="display: none;"></canvas>
+            
+            <audio id="inspector-audio" controls style="display: none; width: 80%;"></audio>
+            
+            <video id="inspector-video" controls class="media-viewer" style="display: none;"></video>
+          </div>
+
+          <!-- Detections Pill Grid -->
+          <div style="margin-top: 20px;">
+            <h3 style="font-size: 0.88rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">
+              Identified Entities & Detections
+            </h3>
+            <div class="detections-grid" id="detections-pills">
+              <!-- Rendered tags -->
+            </div>
+          </div>
+
+          <!-- Forensic Notes & Scene Context -->
+          <div class="intel-card" style="margin-top: 20px;">
+            <div class="intel-card-title">📝 Forensic Scene Notes & Summary</div>
+            <p id="inspector-description">Awaiting forensic processing...</p>
+            <div id="inspector-notes-list" style="margin-top: 10px; font-size: 0.82rem; color: var(--text-muted);"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View 2: Unified Timeline -->
+      <div class="ws-view" id="view-timeline">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div>
+            <h2 style="font-size: 1.15rem; font-weight: 700;">Synchronized Crime Scene Timeline</h2>
+            <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">
+              Reconstructed sequential chronology from video keyframes, audio statements, and photo timestamps.
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-wrapper" id="timeline-events-container">
+          <div class="empty-state">
+            <div class="empty-state-icon">⏳</div>
+            <div class="empty-state-title">No Timeline Reconstructed</div>
+            <div class="empty-state-desc">Upload audio or video footage to automatically reconstruct a forensic timeline.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View 3: Multimodal Intelligence & Fusion -->
+      <div class="ws-view" id="view-fusion">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div>
+            <h2 style="font-size: 1.15rem; font-weight: 700;">Multimodal Forensic Intelligence</h2>
+            <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">
+              Cross-corroboration engine linking visual detections with witness transcripts.
+            </div>
+          </div>
+        </div>
+
+        <div id="fusion-container">
+          <div class="empty-state">
+            <div class="empty-state-icon">🧠</div>
+            <div class="empty-state-title">No Fused Intelligence Available</div>
+            <div class="empty-state-desc">Click "Fuse Multimodal" in the top bar to synthesize evidence across all modalities.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View 4: Reports -->
+      <div class="ws-view" id="view-reports">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div>
+            <h2 style="font-size: 1.15rem; font-weight: 700;">Forensic PDF Reports</h2>
+            <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">
+              Court-ready forensic case documentation with complete chain of custody and analysis logs.
+            </div>
+          </div>
+        </div>
+
+        <div id="reports-container" style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="empty-state">
+            <div class="empty-state-icon">📑</div>
+            <div class="empty-state-title">No Reports Generated Yet</div>
+            <div class="empty-state-desc">Click "Export PDF Report" in the header to compile an official investigation report.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Sidebar: AI Forensic Intelligence Chat Agent -->
+    <aside class="intel-panel glass-panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>🤖</span> Forensic AI Assistant
+        </div>
+        <span style="font-size: 0.65rem; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--success-emerald); padding: 2px 6px; border-radius: 9999px; font-weight: 700;">ONLINE</span>
+      </div>
+
+      <div class="chat-container">
+        <!-- Chat History -->
+        <div class="chat-history" id="chat-history">
+          <div class="chat-bubble assistant">
+            👋 Greetings, Investigator. I am the <strong>CrimeVision AI</strong> intelligence agent. You can ask me natural language queries about any analyzed evidence, weapons, suspects, or timeline events.
+          </div>
+        </div>
+
+        <!-- Quick Suggestions -->
+        <div class="chat-suggestions" id="chat-suggestions">
+          <button class="suggestion-chip" data-prompt="Were any weapons detected?">⚠️ Weapons detected?</button>
+          <button class="suggestion-chip" data-prompt="How many people are in the scene?">👤 People count?</button>
+          <button class="suggestion-chip" data-prompt="Show me the timeline of events">⏱️ Show timeline</button>
+          <button class="suggestion-chip" data-prompt="Give me a summary of findings">📋 Summarize findings</button>
+        </div>
+
+        <!-- Input Area -->
+        <div class="chat-input-area">
+          <input type="text" id="chat-input" class="chat-input" placeholder="Ask forensic query..." autocomplete="off">
+          <button class="btn btn-primary" id="chat-send-btn">Send</button>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Application Logic -->
+  <script src="/js/app.js"></script>
+</body>
+</html>

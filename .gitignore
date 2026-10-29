@@ -1,0 +1,37 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Machine Learning weights
+*.pt
+*.pth
+*.onnx
+
+# Uploads & Reports runtime files (keep directory, ignore dynamic contents)
+uploads/images/*
+uploads/audio/*
+uploads/video/*
+!uploads/images/.gitkeep
+!uploads/audio/.gitkeep
+!uploads/video/.gitkeep
+
+reports/*
+!reports/.gitkeep
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
