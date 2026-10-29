@@ -39,23 +39,59 @@ crimevision-ai/
 └── README.md
 ```
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Local)
 
 ```bash
-# Install dependencies
+# 1. Install dependencies
 pip install -r requirements.txt
 
-# Run the server
-python backend/main.py
+# 2. Run the application
+python run.py
+
+# 3. (Optional) In a separate terminal, auto-load sample forensic evidence:
+python load_sample_data.py
 ```
 
 Open `http://localhost:8000` in your browser.
+Interactive Swagger API documentation is available at `http://localhost:8000/docs`.
+
+---
+
+## 🐳 Docker Deployment
+
+To build and run as a self-contained container:
+
+```bash
+# Using Docker Compose
+docker compose up -d
+
+# Or build manually
+docker build -t crimevision-ai .
+docker run -p 8000:8000 crimevision-ai
+```
+
+---
+
+## ☁️ Cloud Deployment (1-Click)
+
+### Option A: Render.com (Recommended Free Cloud Hosting)
+1. Fork or push to your GitHub: `https://github.com/jenamjain/crimevision-ai`
+2. Go to [render.com](https://render.com) -> **New +** -> **Blueprint**
+3. Select your repository `crimevision-ai`. Render will automatically detect `render.yaml` and deploy your web service!
+
+### Option B: Railway.app
+1. Go to [railway.app](https://railway.app) -> **New Project**
+2. Choose **Deploy from GitHub repo** and select `crimevision-ai`
+3. Railway automatically detects `Procfile` / `Dockerfile` and deploys your live URL.
+
+---
 
 ## 📋 Tech Stack
 
-- **Backend**: FastAPI (Python 3.8+)
+- **Backend**: FastAPI (Python 3.11+)
 - **Computer Vision**: OpenCV, YOLOv8 (Ultralytics)
-- **Audio**: OpenAI Whisper, SpeechRecognition
+- **Audio**: OpenAI Whisper, SpeechRecognition, PyDub
 - **NLP**: spaCy, Transformers, Sentence-Transformers
 - **Reports**: FPDF2, ReportLab
-- **Frontend**: HTML5, CSS3, Vanilla JS
+- **Frontend**: HTML5, Vanilla CSS3 (Dark-Mode Glassmorphism), Vanilla JS
+

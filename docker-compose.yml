@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  crimevision-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: crimevision-ai
+    ports:
+      - "8000:8000"
+    environment:
+      - CRIMEVISION_HOST=0.0.0.0
+      - CRIMEVISION_PORT=8000
+    volumes:
+      - ./uploads:/app/uploads
+      - ./reports:/app/reports
+    restart: unless-stopped

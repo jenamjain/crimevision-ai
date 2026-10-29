@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: crimevision-ai
+    runtime: python
+    buildCommand: "pip install -r requirements.txt && pip install python-multipart fpdf2 reportlab"
+    startCommand: "python run.py"
+    envVars:
+      - key: CRIMEVISION_HOST
+        value: 0.0.0.0
+      - key: CRIMEVISION_PORT
+        value: 8000
+      - key: PYTHON_VERSION
+        value: 3.11.0
